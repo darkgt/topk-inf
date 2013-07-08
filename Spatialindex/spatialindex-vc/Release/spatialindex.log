@@ -1,0 +1,100 @@
+﻿Build started 1/23/2013 2:05:15 PM.
+     1>Project "C:\Users\darkgt\Desktop\topk-inf\Spatialindex\spatialindex-vc\spatialindex.vcxproj" on node 2 (rebuild target(s)).
+     1>_PrepareForClean:
+         Deleting file "Release\spatialindex-vc.lastbuildstate".
+       InitializeBuildStatus:
+         Creating "Release\spatialindex-vc.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I../include /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D SPATIALINDEX_CREATE_DLL /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\src\mvrtree\Index.cc ..\src\mvrtree\Leaf.cc ..\src\mvrtree\MVRTree.cc ..\src\mvrtree\Node.cc ..\src\mvrtree\Statistics.cc ..\src\rtree\BulkLoader.cc ..\src\rtree\RTree.cc ..\src\spatialindex\LineSegment.cc ..\src\spatialindex\MovingPoint.cc ..\src\spatialindex\MovingRegion.cc ..\src\spatialindex\Point.cc ..\src\spatialindex\Region.cc ..\src\spatialindex\SpatialIndexImpl.cc ..\src\spatialindex\TimePoint.cc ..\src\spatialindex\TimeRegion.cc ..\src\storagemanager\Buffer.cc ..\src\storagemanager\DiskStorageManager.cc ..\src\storagemanager\MemoryStorageManager.cc ..\src\storagemanager\RandomEvictionsBuffer.cc ..\src\tools\rand48.cc ..\src\tools\Tools.cc ..\src\tprtree\TPRTree.cc
+         Index.cc
+         Leaf.cc
+         MVRTree.cc
+         Node.cc
+         Statistics.cc
+         BulkLoader.cc
+         RTree.cc
+         LineSegment.cc
+         MovingPoint.cc
+         MovingRegion.cc
+         Point.cc
+         Region.cc
+         SpatialIndexImpl.cc
+         TimePoint.cc
+         TimeRegion.cc
+         Buffer.cc
+         DiskStorageManager.cc
+         MemoryStorageManager.cc
+     1>..\src\storagemanager\MemoryStorageManager.cc(61): warning C4244: 'argument' : conversion from 'const SpatialIndex::id_type' to 'unsigned int', possible loss of data
+     1>..\src\storagemanager\MemoryStorageManager.cc(89): warning C4244: 'argument' : conversion from 'SpatialIndex::id_type' to 'unsigned int', possible loss of data
+     1>..\src\storagemanager\MemoryStorageManager.cc(97): warning C4244: 'argument' : conversion from 'SpatialIndex::id_type' to 'unsigned int', possible loss of data
+     1>..\src\storagemanager\MemoryStorageManager.cc(108): warning C4244: 'argument' : conversion from 'SpatialIndex::id_type' to 'unsigned int', possible loss of data
+     1>..\src\storagemanager\MemoryStorageManager.cc(117): warning C4244: 'argument' : conversion from 'const SpatialIndex::id_type' to 'unsigned int', possible loss of data
+     1>..\src\storagemanager\MemoryStorageManager.cc(125): warning C4244: 'argument' : conversion from 'const SpatialIndex::id_type' to 'unsigned int', possible loss of data
+         RandomEvictionsBuffer.cc
+         rand48.cc
+         Compiling...
+         Tools.cc
+         TPRTree.cc
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I../include /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D SPATIALINDEX_CREATE_DLL /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\Index1.obj" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\src\rtree\Index.cc
+         Index.cc
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I../include /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D SPATIALINDEX_CREATE_DLL /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\Leaf1.obj" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\src\rtree\Leaf.cc
+         Leaf.cc
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I../include /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D SPATIALINDEX_CREATE_DLL /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\Node1.obj" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\src\rtree\Node.cc
+         Node.cc
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I../include /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D SPATIALINDEX_CREATE_DLL /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\Statistics1.obj" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\src\rtree\Statistics.cc
+         Statistics.cc
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I../include /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D SPATIALINDEX_CREATE_DLL /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\Index2.obj" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\src\tprtree\Index.cc
+         Index.cc
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I../include /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D SPATIALINDEX_CREATE_DLL /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\Leaf2.obj" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\src\tprtree\Leaf.cc
+         Leaf.cc
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I../include /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D SPATIALINDEX_CREATE_DLL /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\Node2.obj" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\src\tprtree\Node.cc
+         Node.cc
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I../include /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D SPATIALINDEX_CREATE_DLL /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\Statistics2.obj" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\src\tprtree\Statistics.cc
+         Statistics.cc
+     1>C:\Program Files\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppBuild.targets(990,5): warning MSB8012: TargetPath(C:\Users\darkgt\Desktop\topk-inf\Spatialindex\spatialindex-vc.dll) does not match the Linker's OutputFile property value (C:\Users\darkgt\Desktop\topk-inf\Spatialindex\spatialindex.dll). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
+     1>C:\Program Files\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppBuild.targets(992,5): warning MSB8012: TargetName(spatialindex-vc) does not match the Linker's OutputFile property value (spatialindex). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
+       Link:
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\darkgt\Desktop\topk-inf\Spatialindex\spatialindex.dll" /VERSION:"1.5.0" /INCREMENTAL:NO /NOLOGO /MANIFEST /ManifestFile:"Release\spatialindex-vc.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /PDB:"C:\Users\darkgt\Desktop\topk-inf\Spatialindex\spatialindex-vc.pdb" /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\darkgt\Desktop\topk-inf\Spatialindex\spatialindex-vc.lib" /MACHINE:X86 /DLL Release\Index.obj
+         Release\Leaf.obj
+         Release\MVRTree.obj
+         Release\Node.obj
+         Release\Statistics.obj
+         Release\BulkLoader.obj
+         Release\RTree.obj
+         Release\LineSegment.obj
+         Release\MovingPoint.obj
+         Release\MovingRegion.obj
+         Release\Point.obj
+         Release\Region.obj
+         Release\SpatialIndexImpl.obj
+         Release\TimePoint.obj
+         Release\TimeRegion.obj
+         Release\Buffer.obj
+         Release\DiskStorageManager.obj
+         Release\MemoryStorageManager.obj
+         Release\RandomEvictionsBuffer.obj
+         Release\rand48.obj
+         Release\Tools.obj
+         Release\TPRTree.obj
+         Release\Index1.obj
+         Release\Leaf1.obj
+         Release\Node1.obj
+         Release\Statistics1.obj
+         Release\Index2.obj
+         Release\Leaf2.obj
+         Release\Node2.obj
+         Release\Statistics2.obj
+            Creating library C:\Users\darkgt\Desktop\topk-inf\Spatialindex\spatialindex-vc.lib and object C:\Users\darkgt\Desktop\topk-inf\Spatialindex\spatialindex-vc.exp
+         Generating code
+         Finished generating code
+         spatialindex.vcxproj -> C:\Users\darkgt\Desktop\topk-inf\Spatialindex\spatialindex-vc.dll
+       Manifest:
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\darkgt\Desktop\topk-inf\Spatialindex\spatialindex.dll;#2" /manifest "Release\spatialindex-vc.dll.intermediate.manifest"
+       FinalizeBuildStatus:
+         Deleting file "Release\spatialindex-vc.unsuccessfulbuild".
+         Touching "Release\spatialindex-vc.lastbuildstate".
+     1>Done Building Project "C:\Users\darkgt\Desktop\topk-inf\Spatialindex\spatialindex-vc\spatialindex.vcxproj" (rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:29.71

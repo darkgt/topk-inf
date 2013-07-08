@@ -1,0 +1,17 @@
+﻿Build started 6/27/2013 10:34:43 PM.
+     1>Project "C:\Users\darkgt\Desktop\topk-inf\topk-inf\topk-inf.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\topk-inf.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         All outputs are up-to-date.
+       Link:
+         All outputs are up-to-date.
+         topk-inf.vcxproj -> C:\Users\darkgt\Desktop\topk-inf\Debug\topk-inf.exe
+       FinalizeBuildStatus:
+         Deleting file "Debug\topk-inf.unsuccessfulbuild".
+         Touching "Debug\topk-inf.lastbuildstate".
+     1>Done Building Project "C:\Users\darkgt\Desktop\topk-inf\topk-inf\topk-inf.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.05

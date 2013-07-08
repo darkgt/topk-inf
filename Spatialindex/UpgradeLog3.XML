@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="spatialindex">
+</Property><Property Name="Solution File" Value="C:\Users\darkgt\Desktop\SKGQuery\RTREE\spatialindex.sln">
+</Property><Property Name="User Options File" Value="C:\Users\darkgt\Desktop\SKGQuery\RTREE\spatialindex.suo">
+</Property><Property Name="Date" Value="Tuesday, January 15, 2013">
+</Property><Property Name="Time" Value="20:22 PM">
+</Property><Property Name="Log Number" Value="3">
+</Property></Properties><Event ErrorLevel="2" Project="" Source="spatialindex.sln" Description="Error creating backup file: C:\Users\darkgt\Desktop\SKGQuery\RTREE\spatialindex.sln.old">
+</Event><Event ErrorLevel="2" Project="" Source="spatialindex.suo" Description="Error creating backup file: C:\Users\darkgt\Desktop\SKGQuery\RTREE\spatialindex.suo.old">
+</Event><Event ErrorLevel="3" Project="spatialindex" Source="spatialindex-vc\spatialindex.vcxproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="RTreeBulkLoad" Source="regressiontest\rtree\RTreeBulkLoad.vcproj" Description="Converting project file 'C:\Users\darkgt\Desktop\SKGQuery\RTREE\regressiontest\rtree\RTreeBulkLoad.vcproj'.">
+</Event><Event ErrorLevel="2" Project="RTreeBulkLoad" Source="regressiontest\rtree\RTreeBulkLoad.vcproj" Description="File 'C:\Users\darkgt\Desktop\SKGQuery\RTREE\regressiontest\rtree\RTreeBulkLoad.vcproj' was not found.">
+</Event><Event ErrorLevel="2" Project="RTreeBulkLoad" Source="regressiontest\rtree\RTreeBulkLoad.vcproj" Description="Project upgrade failed.">
+</Event><Event ErrorLevel="3" Project="RTreeBulkLoad" Source="regressiontest\rtree\RTreeBulkLoad.vcproj" Description="Not Converted">
+</Event><Event ErrorLevel="0" Project="RTreeGenerator" Source="regressiontest\rtree\RTreeGenerator.vcproj" Description="Converting project file 'C:\Users\darkgt\Desktop\SKGQuery\RTREE\regressiontest\rtree\RTreeGenerator.vcproj'.">
+</Event><Event ErrorLevel="2" Project="RTreeGenerator" Source="regressiontest\rtree\RTreeGenerator.vcproj" Description="File 'C:\Users\darkgt\Desktop\SKGQuery\RTREE\regressiontest\rtree\RTreeGenerator.vcproj' was not found.">
+</Event><Event ErrorLevel="2" Project="RTreeGenerator" Source="regressiontest\rtree\RTreeGenerator.vcproj" Description="Project upgrade failed.">
+</Event><Event ErrorLevel="3" Project="RTreeGenerator" Source="regressiontest\rtree\RTreeGenerator.vcproj" Description="Not Converted">
+</Event><Event ErrorLevel="0" Project="RTreeLoad" Source="regressiontest\rtree\RTreeLoad.vcproj" Description="Converting project file 'C:\Users\darkgt\Desktop\SKGQuery\RTREE\regressiontest\rtree\RTreeLoad.vcproj'.">
+</Event><Event ErrorLevel="2" Project="RTreeLoad" Source="regressiontest\rtree\RTreeLoad.vcproj" Description="File 'C:\Users\darkgt\Desktop\SKGQuery\RTREE\regressiontest\rtree\RTreeLoad.vcproj' was not found.">
+</Event><Event ErrorLevel="2" Project="RTreeLoad" Source="regressiontest\rtree\RTreeLoad.vcproj" Description="Project upgrade failed.">
+</Event><Event ErrorLevel="3" Project="RTreeLoad" Source="regressiontest\rtree\RTreeLoad.vcproj" Description="Not Converted">
+</Event><Event ErrorLevel="0" Project="RTreeQuery" Source="regressiontest\rtree\RTreeQuery.vcproj" Description="Converting project file 'C:\Users\darkgt\Desktop\SKGQuery\RTREE\regressiontest\rtree\RTreeQuery.vcproj'.">
+</Event><Event ErrorLevel="2" Project="RTreeQuery" Source="regressiontest\rtree\RTreeQuery.vcproj" Description="File 'C:\Users\darkgt\Desktop\SKGQuery\RTREE\regressiontest\rtree\RTreeQuery.vcproj' was not found.">
+</Event><Event ErrorLevel="2" Project="RTreeQuery" Source="regressiontest\rtree\RTreeQuery.vcproj" Description="Project upgrade failed.">
+</Event><Event ErrorLevel="3" Project="RTreeQuery" Source="regressiontest\rtree\RTreeQuery.vcproj" Description="Not Converted">
+</Event><Event ErrorLevel="0" Project="RTreeExhaustive" Source="regressiontest\rtree\RTreeExhaustive.vcproj" Description="Converting project file 'C:\Users\darkgt\Desktop\SKGQuery\RTREE\regressiontest\rtree\RTreeExhaustive.vcproj'.">
+</Event><Event ErrorLevel="2" Project="RTreeExhaustive" Source="regressiontest\rtree\RTreeExhaustive.vcproj" Description="File 'C:\Users\darkgt\Desktop\SKGQuery\RTREE\regressiontest\rtree\RTreeExhaustive.vcproj' was not found.">
+</Event><Event ErrorLevel="2" Project="RTreeExhaustive" Source="regressiontest\rtree\RTreeExhaustive.vcproj" Description="Project upgrade failed.">
+</Event><Event ErrorLevel="3" Project="RTreeExhaustive" Source="regressiontest\rtree\RTreeExhaustive.vcproj" Description="Not Converted">
+</Event><Event ErrorLevel="0" Project="" Source="spatialindex.sln" Description="The solution file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="" Source="spatialindex.sln" Description="No Conversion Required">
+</Event></UpgradeLog>
