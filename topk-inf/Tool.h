@@ -9,33 +9,11 @@
 using namespace std;
 using namespace SpatialIndex;
 
-typedef struct Object
-{
-	double x,y;
-	int mask;
-	int id;
-	int oid;
-	friend bool operator<(const struct Object &a, const struct Object &b){
-		return a.x < b.x;
-	}
-}Object;
 
-typedef unsigned int KEYTYPE; //if more keywords, should use long or long long
-
-typedef union{
-	struct{
-	public:
-		int mbrID, wordsID;
-	};
-	long long key;
-} KeyID;
-
-class Query
+class Vertex
 {
 public:
-	Query() {x=0.0; y=0.0;text = "";}
-	
-	Query(string text, double x , double y)
+	Vertex(string text, double x , double y)
 	{
 		this->text = text;
 		this->x = x;
@@ -46,122 +24,10 @@ public:
 };
 
 
-class RTreeNode{
-public:
-	RTreeNode()
-	{
-		pr = NULL;
-	}
-	~RTreeNode()
-	{
-		delete pr;
-	}
-
-	   id_type identifier;
-	   double minValue;		//the minimum possible score of this node
-	   Region * pr;			//mbr region
-	   KEYTYPE bitmap;		//keywords bitmap
-	   bool isNode;
-       
-       static bool CompareValueLess(const RTreeNode * a,const  RTreeNode * b)
-       {
-		   return a->minValue > b->minValue;
-       }
-};
-
-template<class _Ty>
-struct NodeValueLess : std::binary_function<_Ty, _Ty, bool> {
-       bool operator()(_Ty *_X, _Ty *_Y) const
-	   {return _Ty::CompareValueLess(_X, _Y); }
-};
-
-
 class MyTool
 {
 
 public:
-
-	static vector<int>* ConvertToSet(KEYTYPE key)		//delete in function who calls it
-	{
-		vector<int> *p = new vector<int>();
-		unsigned long mask = 1;
-		for(unsigned int i=0;i<sizeof(key) * 8; i++)
-		{
-			KEYTYPE temp = key & mask;
-			if( temp > 0)
-				p->push_back(i);
-			mask = mask << 1;
-		}
-		return p;
-	}
-
-
-	static int getNumOf1(KEYTYPE key)
-	{
-		int num = 0;
-		unsigned long mask = 1;
-		for(unsigned int i=0;i<sizeof(key) * 8; i++)
-		{
-			KEYTYPE temp = key & mask;
-			if( temp > 0)
-				num++;
-			mask = mask << 1;
-		}
-		return num;
-	}
-
-	static KEYTYPE ConvertToInt(vector<int> *p)
-	{
-		KEYTYPE res = 0;
-		unsigned long mask = 1;
-		for(unsigned int i=0;i<p->size(); i++)
-		{
-			int index = (*p)[i];
-			res += mask << index;
-		}
-		return res;
-	}
-
-
-	static double ComputeMinPossible(Region* pr, Point *pt)
-	{
-		return pr->getMinimumDistance(*pt);
-	}
-
-	static double ComputeMaxPossible(Region* pr, Point *pt)	
-	{
-		double maxD = 0.0;
-		double x = pt->m_pCoords[0], y = pt->m_pCoords[1];
-		double x1 = pr->m_pLow[0], x2 = pr->m_pHigh[0], y1 = pr->m_pLow[1], y2 = pr->m_pHigh[1];
-		double centerX = (x1 + x2)/2, centerY = (y1 + y2)/2;
-
-		if( x >= x1 && x <= x2 && y >= y1 && y <= y2)
-			return 0;
-		else
-		{
-			if( x >= centerX)
-			{
-				if( y >= centerY)
-					maxD = sqrt( (x-x1) * (x-x1) + (y-y1) * (y-y1));
-				else
-					maxD = sqrt( (x-x1) * (x-x1) + (y-y2) * (y-y2));
-			}
-			else
-			{
-				if( y >= centerY)
-					maxD = sqrt( (x-x2) * (x-x2) + (y-y1) * (y-y1));
-				else
-					maxD = sqrt( (x-x2) * (x-x2) + (y-y2) * (y-y2));
-			}
-			return maxD;
-		}
-	}
-
-
-	static double ComputeMBRDist(Region* pr1, Region* pr2)
-	{
-		return pr1->getMinimumDistance(*pr2);
-	}
 
 	static string IntToString(int d)
 	{
@@ -170,11 +36,95 @@ public:
 		return oss.str();
 	}
 
-	static string DoubleToString(double d)
+	static int parseStr(string s, map<int, double> & res)
 	{
-		ostringstream oss;
-		oss<<d;
-		return oss.str();
+		vector<int> words;
+		SplitStr(s, words);
+		for(unsigned int i=0;i<words.size();i++)
+		{
+			int w = words[i];
+			map<int, double>::iterator iter = res.find(w);
+			if( iter == res.end())
+			{
+				res[w] = 1.0;
+			}
+			else
+			{
+				double tmp = res[w];
+				res[w] = tmp + 1;
+			}
+		}
+		return words.size();
+	}
+
+	static void SplitStr(string s, vector<int> & res)			//分词，重复词会出现
+	{
+		istringstream iss(s);
+		int d; char c;
+		iss>>d;
+		res.push_back(d);
+		while(iss>>c>>d)
+		{
+			res.push_back(d);
+		}
+	}
+
+	static double CosSim(string s1, string s2, map<int, vector<int> *> & index)
+	{
+		int total = (*index[-1])[0];
+		map<int, double> v1, v2;
+		int numWords1 = parseStr(s1, v1);
+		int numWords2 = parseStr(s2, v2);
+		if(numWords1 == 0 || numWords2 == 0)		//doc为空
+			return 0.0;
+		
+		map<int, double>::iterator iter = v1.begin();
+		double Len1 = 0.0;
+		for(;iter != v1.end(); ++ iter)
+		{
+			double tmp = iter->second / numWords1;		//tf			
+			tmp *= log( (double)total/(double)index[iter->first]->size());	//idf
+			Len1 += tmp*tmp;
+			v1[iter->first] = tmp;
+		}
+		Len1 = sqrt(Len1);	//
+
+		iter = v2.begin();
+		double Len2 = 0.0;
+		double sim = 0.0;
+		for(;iter != v2.end(); ++ iter)
+		{
+			double tmp = iter->second/ numWords2;	//tf			
+			tmp *= log( (double)total/(double)index[iter->first]->size());
+			Len2 += tmp*tmp;			
+			map<int, double>::iterator rf = v1.find(iter->first);
+			if(rf != v1.end())
+			{
+				sim += tmp * v1[iter->first];
+			}
+		}
+		Len2 = sqrt(Len2);
+
+		double result = sim / (Len1 * Len2);
+		return result;		
+	}
+
+	static double DocVector(string & doc, map<int, double> & vec, map<int, vector<int> *> * index)
+	{		 
+		int total = (*(*index)[-1])[0];	
+
+		int numWords = MyTool::parseStr(doc, vec);
+		map<int, double>::iterator iter = vec.begin();
+		double Len = 0.0;
+		for(;iter != vec.end(); ++ iter)
+		{
+			double tmp = iter->second / numWords;		//tf			
+			tmp *= log( (double)total/(double)(*index)[iter->first]->size());	//idf
+			Len += tmp*tmp;
+			iter->second = tmp;
+		}
+		Len = sqrt(Len);	
+		return Len;
 	}
 
 	static bool FileExist(string &filename)

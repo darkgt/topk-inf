@@ -1,60 +1,42 @@
-#include "IRTree.h"
+#include "IURTree.h"
 
-
-int IRTree::ReadLeafNodes()
+void IURTree::ReadLeafNodes()
 {
-	int total = 0;
+	nodeNum = 0;
 	leaves.clear();
 	ifstream leafF(leafnodeFile.c_str());
-	while( !leafF.eof())
+	string line;
+	while( getline( leafF, line) )
 	{
-		string line;
-		getline(leafF, line);
 		if(line == "")
-			continue;			//FUCK, 又把这一句给忘了，读到最后一个空行，结果把最后一个子结点给冲掉了！！
+			continue;
 		istringstream iss(line);
-		int leafID ;
+		int leafID;
 		char c;
 		iss>>leafID>>c;
 		vector<int> *p = new vector<int>();
 		int nodes;
-		int count = 0;
-		while(iss>>nodes)
+		while(iss>>nodes>>c)
 		{
 			p->push_back(nodes);
-			total ++;			
-			iss>>c;
-			count ++;
+			nodeNum ++;
 		}		
 		leaves[leafID] = p;
-	}	
-
-	N2SG = new int[total];
-	map<int, vector<int> *>::iterator iter;
-	for(iter = leaves.begin(); iter != leaves.end() ; ++ iter)
-	{
-		vector<int> *p = iter->second;
-		vector<int>::iterator iter2;
-		for(iter2 = p->begin(); iter2 != p->end(); ++iter2)
-		{
-			int node = *iter2;
-			N2SG[node] = iter->first;
-		}
 	}
-	return total;
+	leafF.close();
 }
 
-
-void IRTree::ReadIndexNodes()
+void IURTree::ReadIndexNodes()
 {
 	ifstream inodeF(indexnodeFile.c_str());
 	string line;
-	while( getline( inodeF, line))
+	while( getline( inodeF, line) )
 	{
-		if(line=="")
+		if(line == "")
 			continue;
 		istringstream iss(line);
-		int nid;char c;
+		int nid;
+		char c;
 		iss>>nid>>c;
 		vector<int> *p = new vector<int>();
 		int nodes;
@@ -62,35 +44,35 @@ void IRTree::ReadIndexNodes()
 		{
 			p->push_back(nodes);
 		}
-		indexNodes.push_back(make_pair<int, vector<int> *>(nid, p));
+		indexNodes.push_back(make_pair(nid, p));
 	}
 	inodeF.close();
 }
 
-
-
-void IRTree::ComputeVocabularyLeaf()
+void IURTree::ComputeVocabularyLeaf()
 {
+	ReadLeafNodes();
 	ifstream docvecF(termweightFile.c_str());
 	vector<pair<int, double>> ** docvec = new vector<pair<int, double>> *[nodeNum];
 	string line;
 	int count = 0;
-	while( getline(docvecF, line))		//假设能全部读入内存
+	while( getline(docvecF, line) )		//假设能全部读入内存
 	{
 		if( line == "")
 			continue;
 		vector<pair<int, double>> *p = new vector<pair<int, double>>();
 		
 		istringstream iss(line);
-		int node; char c;
+		int keyword; char c;
 		double weight;
-		while(iss>>node>>c>>weight)
+		while(iss>>keyword>>c>>weight)
 		{
-			p->push_back(make_pair<int, double>(node, weight));
+			p->push_back(make_pair(keyword, weight));
 			iss>>c;
 		}
 		docvec[count++] = p;
 	}
+	docvecF.close();
 
 	map<int, vector<int> *>::iterator iter = leaves.begin();
 	for(;iter != leaves.end(); ++iter)
@@ -110,11 +92,11 @@ void IRTree::ComputeVocabularyLeaf()
 				int wordID= wi->first;
 				map<int, vector<pair<int, double>> *>::iterator ti = inverted.find(wordID);
 				if(ti != inverted.end())
-					inverted[wordID]->push_back(make_pair<int, double>(id, wi->second));
+					inverted[wordID]->push_back(make_pair(id, wi->second));
 				else
 				{
 					vector<pair<int,double>> *list = new vector<pair<int, double>>();
-					list->push_back(make_pair<int, double>(id, wi->second));
+					list->push_back(make_pair(id, wi->second));
 					inverted[wordID] = list;
 				}
 			}
@@ -125,24 +107,25 @@ void IRTree::ComputeVocabularyLeaf()
 		map<int, vector<pair<int, double>> *>::iterator fi;		
 		for(fi = inverted.begin(); fi != inverted.end(); ++fi)
 		{
-			outF<<fi->first<<"\t";
-			
 			vector<pair<int,double>> *p = fi->second;
 			vector<pair<int, double>>::iterator iter = p->begin();
-
-			int leng = p->size();
-			double max = 0;
-			double min = 10;	// values not exceed 1
+			double maxWeight = iter->second;
+			double minWeight = iter->second;
 
 			for(; iter != p->end() ; ++iter)
 			{
-				outF<<iter->first<<":"<<iter->second<<"-"<<iter->second<<",";
-				if(iter->second > max)
-					max = iter->second;
-				if(iter->second < min)
-					min = iter->second;
+				outF<<iter->first<<":"<<iter->second<<",";
+				if(iter->second > maxWeight)
+					maxWeight = iter->second;
+				if(iter->second < minWeight)
+					minWeight = iter->second;
 			}
-			outF<<-1<<":"<<max<<"-"<<min<<endl;
+			outF<<fi->first<<"\t";
+			outF<<UNION<<":"<<maxWeight<<",";
+			outF<<INTERSECTION<<":"<<minWeight<<endl;
+			//output:
+			//keywordId \t nodeId : weight , nodeid : weight , ... , UNION : maxWeight , INTERSECTION : minWeight
+			delete p;
 		}
 		outF.close();
 	}
@@ -150,18 +133,15 @@ void IRTree::ComputeVocabularyLeaf()
 	for(int i=0;i<nodeNum;i++)
 		delete docvec[i];
 	delete[] docvec;
-
-	docvecF.close();	
 }
 
-
-void IRTree::ComputeVocabularyIndex()
+void IURTree::ComputeVocabularyIndex()
 {
 	ReadIndexNodes();
-
 	for(int idx = indexNodes.size() - 1; idx >= 0; idx--)		//对于每一个非叶结点
 	{
-		map<int, vector<pair<int, pair<double, double>>> *> inverted;
+		map<int, vector<pair<int, double>> *> unionInverted;
+		map<int, vector<pair<int, double>> *> intersectionInverted;
 
 		int indexID = indexNodes[idx].first;
 		ofstream outF( (vocabFolder + MyTool::IntToString(indexID)).c_str(), ios::binary);
@@ -179,205 +159,68 @@ void IRTree::ComputeVocabularyIndex()
 				istringstream iss(line);
 				iss>>wordID>>c;
 
-				int docID; double maxvalue, minvalue;
-				while(iss>>docID>>c>>maxvalue>>c>>minvalue>>c);		//read the last maximum and minimum value;
-				
+				int docID; double value;
+				double unionValue, intersectionValue;
+				while(iss>>docID>>c>>value>>c){
+					if(docID == UNION)
+						unionValue = value;
+					if(docID == INTERSECTION)
+						intersectionValue = value;
+				}
 
-				map<int, vector<pair<int, pair<double, double>>> *>::iterator iter = inverted.find(wordID);
-				if(iter != inverted.end())
-				{
-					iter->second->push_back(make_pair<int, pair<double, double>>(id, make_pair<double, double>(maxvalue, minvalue)));
+				if(unionInverted.count(wordID) == 0){
+					unionInverted[wordID]        = new vector<pair<int, double>>;
+					intersectionInverted[wordID] = new vector<pair<int, double>>;
 				}
-				else
-				{
-					vector<pair<int, pair<double, double>>> *p = new vector<pair<int, pair<double, double>>>();
-					p->push_back(make_pair<int, pair<double, double>>(id, make_pair<double, double>(maxvalue, minvalue)));
-					inverted[wordID] = p;
-				}
+				unionInverted[wordID].push_back(make_pair(id, unionValue));
+				intersectionInverted[wordID].push_back(make_pair(id, intersectionValue));
 			}
 
 			listF.close();
 		}
 
-		map<int, vector<pair<int, pair<double, double>>> *>::iterator liter = inverted.begin();
+		map<int, vector<pair<int, double>> *>::iterator liter = unionInverted.begin();
 		
-		for(; liter != inverted.end(); ++liter)
+		for(; liter != unionInverted.end(); ++liter)
 		{
-			outF<<liter->first<<"\t";
-			vector<pair<int, pair<double, double>>>::iterator ti = liter->second->begin();
-			double max = 0, min = 10;
-
-			int leng = liter->second->size();
+			int id = liter->first;
+			outF<<id<<"\t";
+			vector<pair<int, double>>::iterator ti = liter->second->begin();
+			double maxWeight = ti->second;
 			for(; ti != liter->second->end(); ++ti)
 			{
-				outF<<ti->first<<":"<<ti->second.first<<"-"<<ti->second.second<<",";
-				if(ti->second.first > max)
-					max = ti->second.first;
-				if(ti->second.second < min)
-					min = ti->second.second;
+				outF<<ti->first<<":"<<ti->second<<","; //Here record the unionValue of each subnode, useless..
+				if(ti->second > maxWeight)
+					maxWeight = ti->second;
+				delete ti->second;
 			}
-			outF<<-1<<":"<<max<<"-"<<min<<endl;
+
+			ti = intersectionInverted[id].begin();
+			double minWeight = ti->second;
+			for(; ti != intersectionInverted[id].end(); ++ti)
+			{
+				if(ti->second < minWeight)
+					minWeight = ti->second;
+				delete ti->second;
+			}
+			outF<<UNION<<":"<<maxWeight<<",";
+			outF<<INTERSECTION<<":"<<minWeight<<endl;
+			//output:
+			//keywordId \t nodeId : submaxWeight , nodeid : submaxWeight , ... , UNION : maxWeight , INTERSECTION : minWeight
 		}
 		outF.close();
 	}
 }
 
-
-/*
-void IRTree::SplitDoc()
-{
-	ifstream textF(termweightFile.c_str());
-	map<int, ofstream *> sdhandlers;
-	
-	string line;
-	int count = 0;
-	while(!textF.eof())
-	{
-		getline(textF, line);
-		if(line == "")
-			continue;
-
-		int nid = N2SG[count];
-		map<int, ofstream *>::iterator si = sdhandlers.find(nid);
-		ofstream *op;
-		if(si == sdhandlers.end())		//如果尚未创建，就对此子结点建立一个文件
-		{
-			if(sdhandlers.size() == 500)		//防止资源溢出
-			{
-				for(int k=0;k<50;k++)
-				{
-					map<int, ofstream *>::iterator replace = sdhandlers.begin();
-					replace->second->close();
-					sdhandlers.erase(replace);
-				}
-			}
-			op = new ofstream((subdocFolder+MyTool::IntToString(nid)).c_str(), ios::app);
-			sdhandlers[nid] = op;
-		}					
-		else
-			op = si->second;
-
-		(*op)<<line<<endl;
-		count++;
-	}
-	
-	map<int, ofstream *>::iterator iter = sdhandlers.begin();
-	for(;iter != sdhandlers.end(); ++iter)
-	{
-		iter->second->close();
-		delete iter->second;
-	}
-	textF.close();
-}*/
-
-
-void IRTree::BuildBTIndex()
-{		
-	map<int, vector<int> *>::iterator iterLeaf = leaves.begin();
-	int blocklength = Blocksize;		//block size
-	
-	for(; iterLeaf != leaves.end(); iterLeaf++)			//构建叶结点的inverted file list
-	{
-		vector<int> *olist = iterLeaf->second;
-		int leafID = iterLeaf->first;
-
-		ifstream leafIFL( (vocabFolder + MyTool::IntToString(leafID)).c_str());
-		
-		string btFile = btreeFolder + MyTool::IntToString(leafID);
-		char *btfname = new char[btFile.size()+1];
-		memcpy(btfname, btFile.c_str(), btFile.size());
-		btfname[btFile.size()] = '\0';
-		BTree* bt=new BTree(btfname,blocklength, 0);			
-
-		string line;
-		while( getline(leafIFL, line) )
-		{				
-			int wordID; char c;
-			istringstream iss(line);
-			iss>>wordID;
-			DATA *p = new DATA();
-			p->key = wordID;
-			for(int i=0;i<DIMENSION;i++)
-				p->data[i] = 0;
-			
-			for(unsigned int i=0; i<olist->size(); i++)
-			{
-				double maxvalue, minvalue;
-				int docid;
-				iss>>docid>>c>>maxvalue>>c>>minvalue>>c;
-				while( docid != (*olist)[i] && docid != -1)	i++;
-				if(docid == -1)
-					break;
-				else
-				{
-					p->data[2*i] = (float)maxvalue;
-					p->data[2*i+1] = (float)minvalue;
-				}
-			}
-			bt->insert(p);
-			delete p;
-		}
-		leafIFL.close();
-		delete bt;
-		delete btfname;
-	}
-	
-	ReadIndexNodes();
-	
-	vector<pair<int, vector<int> *>>::iterator iterIndex = indexNodes.begin();
-	for(; iterIndex != indexNodes.end(); ++iterIndex)
-	{
-		vector<int> *nlist = iterIndex->second;
-		int nid = iterIndex->first;
-		ifstream indexIFL( (vocabFolder + MyTool::IntToString(nid)).c_str());
-		
-		string btFile = btreeFolder + MyTool::IntToString(nid);
-		char *btfname = new char[btFile.size()+1];
-		memcpy(btfname, btFile.c_str(), btFile.size());
-		btfname[btFile.size()] = '\0';
-		BTree* bt=new BTree(btfname,blocklength, 0);	
-		
-		string line;
-		while( getline(indexIFL, line))
-		{				
-			int wordID; char c;
-			istringstream iss(line);
-			iss>>wordID;
-			DATA *p = new DATA();
-			p->key = wordID;
-			
-			for(int i=0;i<DIMENSION;i++)
-				p->data[i] = 0;
-
-			for(unsigned int i=0; i<nlist->size(); i++)
-			{
-				double maxvalue, minvalue;
-				int docid;
-				iss>>docid>>c>>maxvalue>>c>>minvalue>>c;
-				while( docid != (*nlist)[i] && docid != -1)	i++;
-				if(docid == -1)
-					break;
-				else
-				{
-					p->data[2*i] = (float)maxvalue;
-					p->data[2*i+1] = (float)minvalue;
-				}
-			}
-			bt->insert(p);		
-			delete p;
-		}
-		indexIFL.close();
-		delete bt;
-		delete btfname;
-	}
-}
-
-void IRTree::BuildIRTree()
+void IURTree::BuildIRTree()
 {	
 	if(!MyTool::FileExist(termweightFile))
 	{
-		LanguageModel lm(termweightFile, docFile);
-		lm.ComputeLanguageModel();
+		//LanguageModel lm(termweightFile, docFile);
+		//lm.ComputeLanguageModel();
+
+		//VectorSpaceModel vsm(termweightFile, docFile);
+		//vsm.ComputeVectorSpace();
 	}
 
 	RTreeIndex rt(locFile, treeFile, numOfEntry);
@@ -388,17 +231,9 @@ void IRTree::BuildIRTree()
 	
 	if(!MyTool::FileExist(leafnodeFile))
 	{
-		WriteNodeStrategy wns;		
+		WriteNodeStrategy wns;	
 		rt.getTree()->queryStrategy(wns);		//写入文件树结构
 	}
-
-	nodeNum = ReadLeafNodes();
-
-	/*if(_chdir(subdocFolder.c_str()))
-	{
-		_mkdir(subdocFolder.c_str());
-		SplitDoc();
-	}*/
 
 	if(_chdir(vocabFolder.c_str()))
 	{
@@ -407,9 +242,11 @@ void IRTree::BuildIRTree()
 		ComputeVocabularyIndex();
 	}
 
+	/*
 	if(_chdir(btreeFolder.c_str()))
 	{
 		_mkdir(btreeFolder.c_str());
 		BuildBTIndex();
-	}	
+	}
+	*/	
 }

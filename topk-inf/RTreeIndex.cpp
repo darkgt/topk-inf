@@ -1,9 +1,18 @@
 #include "RTreeIndex.h"
 
+
+RTreeIndex::RTreeIndex(string pFile, string tFile, unsigned int capacity)
+{
+	pointFile = pFile;
+	this->capacity = capacity;
+	treeFile = tFile;
+}
+
+
 void RTreeIndex::CreateRTree()
 {
-	diskfile = StorageManager::createNewDiskStorageManager(treeFile, rtreePageSize);		//4k size page
-	file = StorageManager::createNewRandomEvictionsBuffer(*diskfile, cacheblock, false);		//cache block number 1000
+	diskfile = StorageManager::createNewDiskStorageManager(treeFile, 4096);
+	file = StorageManager::createNewRandomEvictionsBuffer(*diskfile, 1000, false);
 	tree = RTree::createNewRTree(*file, 0.7, capacity, capacity, 2, SpatialIndex::RTree::RV_RSTAR, indexIdentifier);
 
 	ifstream pFile(pointFile.c_str());
@@ -31,6 +40,6 @@ void RTreeIndex::CreateRTree()
 void RTreeIndex::ReadIndex()
 {
 	diskfile = StorageManager::loadDiskStorageManager(treeFile);
-	file = StorageManager::createNewRandomEvictionsBuffer(*diskfile, cacheblock, false);
+	file = StorageManager::createNewRandomEvictionsBuffer(*diskfile, 1000, false);
 	tree = RTree::loadRTree(*file, 1);
 }

@@ -45,4 +45,3 @@ void DATA::print() {
 		printf("%7.5f ",data[i]);
 	printf(")\n");
 }
-

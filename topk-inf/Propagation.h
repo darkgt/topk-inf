@@ -1,5 +1,5 @@
-#ifndef PROPAGATION
-#define PROPAGATION
+#ifndef _PROPAGATION_H_
+#define _PROPAGATION_H_
 
 #include <vector>
 #include <queue>
@@ -31,7 +31,6 @@ public:
 	}
 
 	//directed edge
-	
 	void addEdge (int u, int v){
 		struct EdgeInfo info;
 		info.neighbor = v;
@@ -86,7 +85,6 @@ public:
 
 class BookmarkColor : public HierarchicalUserGraph{
 protected:
-	std::vector<double> vecInfScore;
 	std::map<unsigned, double> mapInfScore;
 	std::map<unsigned, int> hubLevel;
 	std::map<unsigned, std::map<unsigned, double> > bcaVector;
@@ -101,41 +99,7 @@ public:
 	void setTolerance(double tolerance){
 		this->tolerance = tolerance;
 	}
-	/*
-	std::vector<double>* singleNodePropagation(unsigned bookmarkNodeId, double inf = 1.0){
-		vecInfScore = std::vector<double> (userNum, 0.0);
-		std::map<unsigned, pair<unsigned, double>* >inQueue;//mark whether a node is in the queue
-		std::queue<pair<unsigned, double> >myQueue;
 
-		myQueue.push(make_pair(bookmarkNodeId, inf));
-		inQueue[bookmarkNodeId] = &myQueue.back();
-		while(!myQueue.empty()){
-			unsigned curNode = myQueue.front().first;
-			double  transInf = myQueue.front().second;
-			myQueue.pop();
-			vecInfScore[curNode] += transInf * teleportation;
-			inQueue.erase(curNode);
-			if( transInf < tolerance)
-				continue;
-			std::vector<EdgeInfo>* pEdges = getNeighbors(curNode);
-			unsigned neighborsNum = pEdges->size(); //degree of the node
-			std::vector<EdgeInfo>::iterator it = pEdges->begin();
-			for(; it != pEdges -> end(); it++){
-				unsigned nextNode = (*it).neighbor;
-				double propInf = transInf * (1 - teleportation) / neighborsNum;
-				if(inQueue.count(nextNode) > 0){
-					//in the queue
-					inQueue[nextNode]->second += propInf;
-				}
-				else{
-					myQueue.push(make_pair(nextNode, propInf));
-					inQueue[bookmarkNodeId] = &myQueue.back();
-				}
-			}
-		}
-		return &vecInfScore;
-	}
-	*/
 	std::map<unsigned, double>* singleNodePropagation(unsigned bookmarkNodeId, double inf = 1.0, std::map<unsigned, int>* hubLevel = NULL){
 		mapInfScore.clear();
 		std::map<unsigned, double>unpropagatedInf;
@@ -178,7 +142,8 @@ public:
 		char fileName[MAX_FILENAME_LEN];
 		sprintf_s(fileName, MAX_FILENAME_LEN, "%s%u", bcaVectorDir.c_str(), id); //should "try" here...
 
-		FILE *pFile = fopen(fileName, "w");
+		FILE *pFile;
+		fopen_s(&pFile, fileName, "w");
 		if(NULL == pFile)
 			std::cerr<<"Failed to open"<<fileName<<"\n";
 		std::map<unsigned, double>::iterator iter = mapInfScore.begin();
@@ -202,11 +167,12 @@ public:
 				//std::cerr<< file.name << std::endl;
 				char fileName[MAX_FILENAME_LEN];
 				sprintf_s(fileName, MAX_FILENAME_LEN, "%s%s", bcaVectorDir.c_str(), file.name); //should "try" here...
-				FILE *pFile = fopen(fileName, "r");
+				FILE *pFile;
+				fopen_s(&pFile, fileName, "r");
 				unsigned hubId = atoi(file.name);
 				unsigned id;
 				double 	inf;
-				while(fscanf(pFile, "%u %lf", &id, &inf) != EOF){
+				while(fscanf_s(pFile, "%u %lf", &id, &inf, MAX_FILENAME_LEN) != EOF){
 					bcaVector[hubId][id] = inf;
 				}
 				fclose(pFile);

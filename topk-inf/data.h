@@ -8,6 +8,7 @@
 #include <string.h>
 
 typedef unsigned long long bitmask_t;
+typedef unsigned char VECTYPE;
 
 #define DIMENSION 	(80)	// 40 it should be consistant with the number of entries in R-Tree
 
