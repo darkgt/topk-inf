@@ -1,5 +1,19 @@
 #include "IURTree.h"
 
+IURTree::~IURTree(){
+	map<int, vector<int> *>::iterator iter = leaves.begin();
+	for(;iter != leaves.end(); ++iter)
+	{
+		delete iter->second;
+	}
+	vector<pair<int, vector<int> *>>::iterator iter2 = indexNodes.begin();
+	for(;iter2 != indexNodes.end(); ++iter2)
+	{
+		vector<int> * p = iter2->second;
+		delete p;
+	}
+}
+
 void IURTree::ReadLeafNodes()
 {
 	nodeNum = 0;
@@ -13,10 +27,10 @@ void IURTree::ReadLeafNodes()
 		istringstream iss(line);
 		int leafID;
 		char c;
-		iss>>leafID>>c;
+		iss >> leafID >> c;
 		vector<int> *p = new vector<int>();
 		int nodes;
-		while(iss>>nodes>>c)
+		while(iss >> nodes >> c)
 		{
 			p->push_back(nodes);
 			nodeNum ++;
@@ -37,10 +51,10 @@ void IURTree::ReadIndexNodes()
 		istringstream iss(line);
 		int nid;
 		char c;
-		iss>>nid>>c;
+		iss >> nid >> c;
 		vector<int> *p = new vector<int>();
 		int nodes;
-		while(iss>>nodes>>c)
+		while(iss >> nodes >> c)
 		{
 			p->push_back(nodes);
 		}
@@ -52,7 +66,7 @@ void IURTree::ReadIndexNodes()
 void IURTree::ComputeVocabularyLeaf()
 {
 	ReadLeafNodes();
-	ifstream docvecF(termweightFile.c_str());
+	ifstream docvecF(ltermweightFile.c_str());
 	vector<pair<int, double>> ** docvec = new vector<pair<int, double>> *[nodeNum];
 	string line;
 	int count = 0;
@@ -65,10 +79,10 @@ void IURTree::ComputeVocabularyLeaf()
 		istringstream iss(line);
 		int keyword; char c;
 		double weight;
-		while(iss>>keyword>>c>>weight)
+		while(iss >> keyword >> c >> weight)
 		{
 			p->push_back(make_pair(keyword, weight));
-			iss>>c;
+			iss >> c;
 		}
 		docvec[count++] = p;
 	}
@@ -214,13 +228,12 @@ void IURTree::ComputeVocabularyIndex()
 
 void IURTree::BuildIRTree()
 {	
-	if(!MyTool::FileExist(termweightFile))
+	if(!MyTool::FileExist(ltermweightFile))
 	{
 		//LanguageModel lm(termweightFile, docFile);
 		//lm.ComputeLanguageModel();
-
-		//VectorSpaceModel vsm(termweightFile, docFile);
-		//vsm.ComputeVectorSpace();
+		VectorSpaceModel vsm(ltermweightFile, utermweightFile, userdoc);
+		vsm.ComputeTermWeight(docFile);
 	}
 
 	RTreeIndex rt(locFile, treeFile, numOfEntry);

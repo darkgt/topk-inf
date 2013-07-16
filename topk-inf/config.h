@@ -4,7 +4,7 @@
 #include <string>
 //This file defines the constant parameters such as file paths
 
-//File paths
+/****** File paths ******/
 
 //#define GOWALLA
 #define BRIGHTKITA
@@ -27,7 +27,7 @@ int hublevel				= 10;
 #endif
 
 std::string userdoc			= baseDir + "userdoc";				//text description of users
-std::string userLoc			= baseDir + "userloc";				//check location of users
+std::string userloc			= baseDir + "userloc";				//check location of users
 std::string utermweightFile	= baseDir + "vsm_user_value";		//term weight of each user keyword
 
 /*******  Location Index  *******/
@@ -44,7 +44,11 @@ std::string ltermweightFile	= basepath + "vsm_loc_value";		//vector space model 
 std::string vocabFolder		= basepath + "vocabulary\\";		//term weight of each node
 std::string btreeFolder		= basepath + "btreeindex\\";		//B+ tree index
 
-//size_t
+/****** Sizes ******/
 #define MAX_FILENAME_LEN 256
+
+/****** Constant Values ******/
+int numOfEntry = 100;
+int Blocksize = 4 * 1024;
 
 #endif

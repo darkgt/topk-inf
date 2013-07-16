@@ -6,6 +6,8 @@
 #include "btree.h"
 #include "WriteNodeStrategy.h"
 #include "Tool.h"
+#include "TermWeight.h"
+
 //#include "config.h"
 
 /*
@@ -19,8 +21,10 @@ extern string locFile;
 extern string leafnodeFile;
 extern string indexnodeFile;
 
-extern string termweightFile;
+extern string ltermweightFile;
+extern string utermweightFile;
 extern string treeFile;
+extern string userdoc;
 
 extern string vocabFolder;
 extern string btreeFolder;
@@ -29,30 +33,19 @@ extern string subdocFolder;
 extern int numOfEntry;
 extern int Blocksize;
 
-#define UNION        -1
-#define INTERSECTION -2
+#define UNION			-1
+#define INTERSECTION	-2
 
 class IURTree
 {
+protected:
 	int nodeNum;//Rtree node num
 	map<int, vector<int> *> leaves;
 	vector<pair<int, vector<int> *>> indexNodes;
 
 public:
 
-	virtual ~IURTree(){
-		map<int, vector<int> *>::iterator iter = leaves.begin();
-		for(;iter != leaves.end(); ++iter)
-		{
-			delete iter->second;
-		}
-		vector<pair<int, vector<int> *>>::iterator iter2 = indexNodes.begin();
-		for(;iter2 != indexNodes.end(); ++iter2)
-		{
-			vector<int> * p = iter2->second;
-			delete p;
-		}	
-	}
+	virtual ~IURTree();
 
 	void ReadLeafNodes();
 	void ReadIndexNodes();
